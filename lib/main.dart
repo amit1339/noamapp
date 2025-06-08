@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart'; // Add this import
 import 'login.dart';
 import 'home_page.dart';
 import 'map_page.dart';
@@ -7,7 +6,6 @@ import 'schedule_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // Initialize Firebase
   runApp(const MyApp());
 }
 

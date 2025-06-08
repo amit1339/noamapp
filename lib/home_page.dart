@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Add this import
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -87,30 +86,11 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () async {
-              await FirebaseFirestore.instance.collection('customers').add({
-                'name': _nameController.text,
-                'phone': _phoneController.text,
-                'email': _emailController.text,
-                'address': _addressController.text,
-                'sofa': _sofa,
-                'airConditioner': _airConditioner,
-                'car': _car,
-                'createdAt': FieldValue.serverTimestamp(),
-              });
+            onPressed: () {
+              // Add your logic to handle adding a customer here
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Customer added!')),
               );
-              // Optionally clear fields after saving
-              _nameController.clear();
-              _phoneController.clear();
-              _emailController.clear();
-              _addressController.clear();
-              setState(() {
-                _sofa = false;
-                _airConditioner = false;
-                _car = false;
-              });
             },
             child: const Text('Add Customer'),
           ),
