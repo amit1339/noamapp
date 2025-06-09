@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "145851234477",
+    "project_id": "noamapp-399dc",
+    "storage_bucket": "noamapp-399dc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145851234477:android:994aee311bccd7a1e12e24",
+        "android_client_info": {
+          "package_name": "com.example.noamapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqewAJlUa7WEVLIH4z3V0LEp4Q81-stv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
