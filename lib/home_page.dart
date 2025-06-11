@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Add this import
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'customer.dart'; // Import the Customer class
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   bool _sofa = false;
   bool _airConditioner = false;
   bool _car = false;
+  DateTime? _appointmentDate;
 
   @override
   Widget build(BuildContext context) {
@@ -88,23 +90,26 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
-              // Save customer data to Firestore
-              await FirebaseFirestore.instance.collection('customers').add({
-                'name': _nameController.text,
-                'phone': _phoneController.text,
-                'email': _emailController.text,
-                'address': _addressController.text,
-                'sofa': _sofa,
-                'airConditioner': _airConditioner,
-                'car': _car,
-                'createdAt': FieldValue.serverTimestamp(),
-              });
+              // Use the Customer class
+              final customer = Customer(
+                name: _nameController.text,
+                phone: _phoneController.text,
+                email: _emailController.text,
+                address: _addressController.text,
+                sofa: _sofa,
+                airConditioner: _airConditioner,
+                car: _car,
+                appointmentDate: _appointmentDate,
+              );
+
+              await FirebaseFirestore.instance
+                  .collection('customers')
+                  .add(customer.toJson());
 
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Customer added!')),
               );
 
-              // Optionally clear fields after saving
               _nameController.clear();
               _phoneController.clear();
               _emailController.clear();
@@ -113,6 +118,7 @@ class _HomePageState extends State<HomePage> {
                 _sofa = false;
                 _airConditioner = false;
                 _car = false;
+                _appointmentDate = null;
               });
             },
             child: const Text('Add Customer'),

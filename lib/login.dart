@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'main.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,19 +15,21 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   String? _errorMessage;
 
-  void _login() {
-    final username = _usernameController.text;
-    final password = _passwordController.text;
-    if (username == 'noam' && password == '1234') {
+  void _login() async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _usernameController.text.trim(),
+        password: _passwordController.text,
+      );
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => MyHomePage(title: 'Home'),
         ),
       );
-    } else {
+    } on FirebaseAuthException catch (e) {
       setState(() {
-        _errorMessage = 'Invalid username or password';
+        _errorMessage = e.message ?? 'Login failed';
       });
     }
   }
