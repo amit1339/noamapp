@@ -17,6 +17,7 @@ class _MapPageState extends State<MapPage> {
   GoogleMapController? _mapController;
   final Set<Marker> _markers = {};
   LatLng _initialCameraPosition = const LatLng(32.0853, 34.7818); // Default: Tel Aviv
+  bool _dialogOpen = false; // Add this
 
   @override
   void initState() {
@@ -42,8 +43,11 @@ class _MapPageState extends State<MapPage> {
                   markerId: MarkerId(doc.id),
                   position: LatLng(latLng.latitude, latLng.longitude),
                   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-                  onTap: () {
-                    showDialog(
+                  onTap: () async {
+                    setState(() {
+                      _dialogOpen = true;
+                    });
+                    await showDialog(
                       context: context,
                       builder: (context) {
                         final customer = Customer.fromJson(data);
@@ -53,6 +57,9 @@ class _MapPageState extends State<MapPage> {
                         );
                       },
                     );
+                    setState(() {
+                      _dialogOpen = false;
+                    });
                   },
                 ),
               );
@@ -95,6 +102,12 @@ class _MapPageState extends State<MapPage> {
       onMapCreated: (controller) {
         _mapController = controller;
       },
+      zoomGesturesEnabled: !_dialogOpen,
+      scrollGesturesEnabled: !_dialogOpen,
+      rotateGesturesEnabled: !_dialogOpen,
+      tiltGesturesEnabled: !_dialogOpen,
+      myLocationEnabled: !_dialogOpen,
+      myLocationButtonEnabled: !_dialogOpen,
     );
   }
 }

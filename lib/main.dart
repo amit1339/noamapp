@@ -46,6 +46,8 @@ class _MyHomePageState extends State<MyHomePage> {
     SchedulePage(),
   ];
 
+  final List<String> _titles = ['Home', 'Map', 'Schedule'];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -56,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(_titles[_selectedIndex]), // <-- Set title dynamically
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(

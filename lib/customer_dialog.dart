@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'customer.dart';
 
 class CustomerDialog extends StatefulWidget {
@@ -113,11 +114,16 @@ class _CustomerDialogState extends State<CustomerDialog> {
         ),
         if (widget.showBitButton) // Conditionally show Bit button
           ElevatedButton(
-            onPressed: () {
-              // TODO: Add your Bit button logic here
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Bit button pressed!')),
-              );
+            onPressed: () async {
+              final phone = widget.customer.phone;
+              final url = Uri.parse('sms:$phone?body=${Uri.encodeComponent('Check this out: https://www.google.com/')}');
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Could not launch SMS app')),
+                );
+              }
             },
             child: const Text('Bit'),
           ),

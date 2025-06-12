@@ -121,7 +121,7 @@ class _SchedulePageState extends State<SchedulePage> {
                               color: customer.sofa
                                   ? Colors.blue.shade100
                                   : customer.airConditioner
-                                      ? Colors.orange.shade100
+                                      ? const Color.fromARGB(255, 228, 88, 8)
                                       : Colors.white,
                             ),
                       child: ListTile(
