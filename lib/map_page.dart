@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'customer_dialog.dart';
+import 'customer.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -40,10 +42,18 @@ class _MapPageState extends State<MapPage> {
                   markerId: MarkerId(doc.id),
                   position: LatLng(latLng.latitude, latLng.longitude),
                   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-                  infoWindow: InfoWindow(
-                    title: name,
-                    snippet: address,
-                  ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        final customer = Customer.fromJson(data);
+                        return CustomerDialog(
+                          customer: customer,
+                          docId: doc.id,
+                        );
+                      },
+                    );
+                  },
                 ),
               );
             });
