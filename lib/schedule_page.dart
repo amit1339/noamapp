@@ -100,21 +100,47 @@ class _SchedulePageState extends State<SchedulePage> {
                 itemCount: appointments.length,
                 itemBuilder: (context, index) {
                   final customer = appointments[index];
+                  Color tileColor = Colors.white;
+                  if (customer.sofa) {
+                    tileColor = Colors.blue.shade100;
+                  } else if (customer.airConditioner) {
+                    tileColor = Colors.orange.shade100;
+                  }
                   return Card(
-                    child: ListTile(
-                      title: Text(customer.name),
-                      subtitle: Text(
-                        'Time: ${customer.appointmentDate != null ? TimeOfDay.fromDateTime(customer.appointmentDate!).format(context) : ''}',
+                    child: Container(
+                      decoration: (customer.sofa && customer.airConditioner)
+                          ? BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Colors.orange.shade100, Colors.blue.shade100],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                stops: const [0.5, 0.5],
+                              ),
+                            )
+                          : BoxDecoration(
+                              color: customer.sofa
+                                  ? Colors.blue.shade100
+                                  : customer.airConditioner
+                                      ? Colors.orange.shade100
+                                      : Colors.white,
+                            ),
+                      child: ListTile(
+                        title: Text(customer.name),
+                        subtitle: Text(
+                          'Time: ${customer.appointmentDate != null ? TimeOfDay.fromDateTime(customer.appointmentDate!).format(context) : ''}',
+                        ),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => CustomerDialog(
+                              customer: customer,
+                              docId: '',
+                              showSetAppointment: false,
+                              showBitButton: true, // Show Bit button only here
+                            ),
+                          );
+                        },
                       ),
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => CustomerDialog(
-                            customer: customer,
-                            docId: '', // If you want to allow editing, pass the docId here
-                          ),
-                        );
-                      },
                     ),
                   );
                 },

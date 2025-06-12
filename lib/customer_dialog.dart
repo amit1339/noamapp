@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'customer.dart';
 
 class CustomerDialog extends StatefulWidget {
   final Customer customer;
   final String docId;
+  final bool showSetAppointment;
+  final bool showBitButton; // Add this
 
-  const CustomerDialog({super.key, required this.customer, required this.docId});
+  const CustomerDialog({
+    super.key,
+    required this.customer,
+    required this.docId,
+    this.showSetAppointment = true,
+    this.showBitButton = false, // default false
+  });
 
   @override
   State<CustomerDialog> createState() => _CustomerDialogState();
@@ -83,14 +92,18 @@ class _CustomerDialogState extends State<CustomerDialog> {
           Text(
             _selectedDateTime == null
                 ? 'No appointment set'
-                : 'Appointment: ${_selectedDateTime!.toLocal()}',
+                : 'Appointment: ${DateFormat('yyyy-MM-dd').format(_selectedDateTime!)}  ${DateFormat('HH:mm').format(_selectedDateTime!)}',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: _pickDateTime,
-            child: const Text('Set Appointment Date & Time'),
-          ),
+          if (widget.showSetAppointment)
+            ...[
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: _pickDateTime,
+                child: const Text('Set Appointment Date & Time'),
+              ),
+            ],
         ],
       ),
       actions: [
@@ -98,6 +111,16 @@ class _CustomerDialogState extends State<CustomerDialog> {
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Close'),
         ),
+        if (widget.showBitButton) // Conditionally show Bit button
+          ElevatedButton(
+            onPressed: () {
+              // TODO: Add your Bit button logic here
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Bit button pressed!')),
+              );
+            },
+            child: const Text('Bit'),
+          ),
       ],
     );
   }
