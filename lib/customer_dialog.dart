@@ -3,14 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'customer.dart';
-import 'edit_customer_page.dart';
+import 'home_page.dart'; // <-- Use the unified form
 
 class CustomerDialog extends StatefulWidget {
   final Customer customer;
   final String docId;
   final bool showSetAppointment;
   final bool showBitButton;
-  final VoidCallback? onCustomerChanged; // <-- Add this line
+  final VoidCallback? onCustomerChanged;
 
   const CustomerDialog({
     super.key,
@@ -18,7 +18,7 @@ class CustomerDialog extends StatefulWidget {
     required this.docId,
     this.showSetAppointment = true,
     this.showBitButton = false,
-    this.onCustomerChanged, // <-- Add this line
+    this.onCustomerChanged,
   });
 
   @override
@@ -89,10 +89,13 @@ class _CustomerDialogState extends State<CustomerDialog> {
                       Navigator.of(context).pop();
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => EditCustomerPage(
-                            customer: widget.customer,
-                            docId: widget.docId,
-                            onCustomerChanged: widget.onCustomerChanged,
+                          builder: (context) => Scaffold(
+                            appBar: AppBar(title: const Text('Edit Customer')),
+                            body: CustomerForm(
+                              customer: widget.customer,
+                              docId: widget.docId,
+                              onCustomerChanged: widget.onCustomerChanged,
+                            ),
                           ),
                         ),
                       );
@@ -110,7 +113,7 @@ class _CustomerDialogState extends State<CustomerDialog> {
                           .doc(widget.docId)
                           .delete();
                       if (widget.onCustomerChanged != null) {
-                        widget.onCustomerChanged!(); // Call the callback
+                        widget.onCustomerChanged!();
                       }
                       Navigator.of(context).pop(true);
                       ScaffoldMessenger.of(context).showSnackBar(

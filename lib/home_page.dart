@@ -1,28 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart'; // Import intl package for DateFormat
-import 'customer.dart'; // Import the Customer class
+import 'package:intl/intl.dart';
+import 'customer.dart';
 import 'translations.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  Widget build(BuildContext context) {
+    return CustomerForm();
+  }
 }
 
-class _HomePageState extends State<HomePage> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _remarkController = TextEditingController();
+class CustomerForm extends StatefulWidget {
+  final Customer? customer;
+  final String? docId;
+  final VoidCallback? onCustomerChanged;
+
+  const CustomerForm({
+    super.key,
+    this.customer,
+    this.docId,
+    this.onCustomerChanged,
+  });
+
+  @override
+  State<CustomerForm> createState() => _CustomerFormState();
+}
+
+class _CustomerFormState extends State<CustomerForm> {
+  late TextEditingController _nameController;
+  late TextEditingController _phoneController;
+  late TextEditingController _addressController;
+  late TextEditingController _remarkController;
 
   final _formKey = GlobalKey<FormState>();
 
   bool _sofa = false;
   bool _airConditioner = false;
-  bool _car = false;
   DateTime? _appointmentDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.customer?.name ?? '');
+    _phoneController = TextEditingController(text: widget.customer?.phone ?? '');
+    _addressController = TextEditingController(text: widget.customer?.address ?? '');
+    _remarkController = TextEditingController(text: widget.customer?.remark ?? '');
+    _sofa = widget.customer?.sofa ?? false;
+    _airConditioner = widget.customer?.airConditioner ?? false;
+    _appointmentDate = widget.customer?.appointmentDate;
+  }
 
   @override
   void dispose() {
@@ -31,6 +60,51 @@ class _HomePageState extends State<HomePage> {
     _addressController.dispose();
     _remarkController.dispose();
     super.dispose();
+  }
+
+  Future<void> _saveCustomer() async {
+    if (_formKey.currentState!.validate()) {
+      final customer = Customer(
+        name: _nameController.text,
+        phone: _phoneController.text,
+        address: _addressController.text,
+        sofa: _sofa,
+        airConditioner: _airConditioner,
+        appointmentDate: _appointmentDate,
+        remark: _remarkController.text.isNotEmpty ? _remarkController.text : null,
+      );
+      if (widget.customer == null) {
+        // Add new customer
+        await FirebaseFirestore.instance
+            .collection('customers')
+            .add(customer.toJson());
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Customer added!')),
+        );
+        _nameController.clear();
+        _phoneController.clear();
+        _addressController.clear();
+        _remarkController.clear();
+        setState(() {
+          _sofa = false;
+          _airConditioner = false;
+          _appointmentDate = null;
+        });
+      } else {
+        // Update existing customer
+        await FirebaseFirestore.instance
+            .collection('customers')
+            .doc(widget.docId)
+            .update(customer.toJson());
+        if (widget.onCustomerChanged != null) {
+          widget.onCustomerChanged!();
+        }
+        Navigator.of(context).pop(true);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Customer updated!')),
+        );
+      }
+    }
   }
 
   @override
@@ -45,7 +119,7 @@ class _HomePageState extends State<HomePage> {
               controller: _nameController,
               decoration: InputDecoration(
                 labelText: Translations.text('name'),
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
               validator: (value) =>
                   value == null || value.isEmpty ? 'Name is required' : null,
@@ -55,7 +129,7 @@ class _HomePageState extends State<HomePage> {
               controller: _phoneController,
               decoration: InputDecoration(
                 labelText: Translations.text('phone'),
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
               keyboardType: TextInputType.phone,
               validator: (value) =>
@@ -66,7 +140,7 @@ class _HomePageState extends State<HomePage> {
               controller: _addressController,
               decoration: InputDecoration(
                 labelText: Translations.text('address'),
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
               validator: (value) =>
                   value == null || value.isEmpty ? 'Address is required' : null,
@@ -76,7 +150,7 @@ class _HomePageState extends State<HomePage> {
               controller: _remarkController,
               decoration: InputDecoration(
                 labelText: Translations.text('remark'),
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
               maxLines: 2,
             ),
@@ -108,7 +182,6 @@ class _HomePageState extends State<HomePage> {
               ),
               trailing: const Icon(Icons.calendar_today),
               onTap: () async {
-                // Pick date
                 DateTime? pickedDate = await showDatePicker(
                   context: context,
                   initialDate: _appointmentDate ?? DateTime.now(),
@@ -116,8 +189,6 @@ class _HomePageState extends State<HomePage> {
                   lastDate: DateTime(2100),
                 );
                 if (pickedDate == null) return;
-
-                // Pick time
                 TimeOfDay? pickedTime = await showTimePicker(
                   context: context,
                   initialTime: TimeOfDay.fromDateTime(_appointmentDate ?? DateTime.now()),
@@ -129,7 +200,6 @@ class _HomePageState extends State<HomePage> {
                   },
                 );
                 if (pickedTime == null) return;
-
                 setState(() {
                   _appointmentDate = DateTime(
                     pickedDate.year,
@@ -143,39 +213,10 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  // All fields are valid, proceed to add customer
-                  final customer = Customer(
-                    name: _nameController.text,
-                    phone: _phoneController.text,
-                    address: _addressController.text,
-                    sofa: _sofa,
-                    airConditioner: _airConditioner,
-                    appointmentDate: _appointmentDate,
-                    remark: _remarkController.text.isNotEmpty ? _remarkController.text : null,
-                  );
-                  await FirebaseFirestore.instance
-                      .collection('customers')
-                      .add(customer.toJson());
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Customer added!')),
-                  );
-
-                  _nameController.clear();
-                  _phoneController.clear();
-                  _addressController.clear();
-                  _remarkController.clear();
-                  setState(() {
-                    _sofa = false;
-                    _airConditioner = false;
-                    _car = false;
-                    _appointmentDate = null;
-                  });
-                }
-              },
-              child: Text(Translations.text('add_customer')),
+              onPressed: _saveCustomer,
+              child: Text(widget.customer == null
+                  ? Translations.text('add_customer')
+                  : 'Save'),
             ),
           ],
         ),
