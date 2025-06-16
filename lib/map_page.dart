@@ -27,16 +27,13 @@ class _MapPageState extends State<MapPage> {
 
   Future<void> _loadCustomerMarkers() async {
     final customers = await FirebaseFirestore.instance.collection('customers').get();
-    print('Fetched ${customers.docs.length} customers from Firestore');
     for (var doc in customers.docs) {
       final data = doc.data();
       final address = data['address'] ?? '';
-      final name = data['name'] ?? '';
       if (address.isNotEmpty) {
         try {
           LatLng? latLng = await getLatLngFromAddress(address);
           if (latLng != null) {
-            print('Customer: $name, Address: $address, LatLng: (${latLng.latitude}, ${latLng.longitude})');
             setState(() {
               _markers.add(
                 Marker(
@@ -47,7 +44,7 @@ class _MapPageState extends State<MapPage> {
                     setState(() {
                       _dialogOpen = true;
                     });
-                    await showDialog(
+                    final result = await showDialog(
                       context: context,
                       builder: (context) {
                         final customer = Customer.fromJson(data);
@@ -60,6 +57,11 @@ class _MapPageState extends State<MapPage> {
                     setState(() {
                       _dialogOpen = false;
                     });
+                    if (result == true) {
+                      // Data was changed, reload markers
+                      _markers.clear();
+                      await _loadCustomerMarkers();
+                    }
                   },
                 ),
               );

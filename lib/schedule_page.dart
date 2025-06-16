@@ -111,7 +111,7 @@ class _SchedulePageState extends State<SchedulePage> {
                       decoration: (customer.sofa && customer.airConditioner)
                           ? BoxDecoration(
                               gradient: LinearGradient(
-                                colors: [Colors.orange.shade100, Colors.blue.shade100],
+                                colors: [Color.fromARGB(255, 248, 155, 102), Colors.blue.shade100],
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
                                 stops: const [0.5, 0.5],
@@ -121,7 +121,7 @@ class _SchedulePageState extends State<SchedulePage> {
                               color: customer.sofa
                                   ? Colors.blue.shade100
                                   : customer.airConditioner
-                                      ? const Color.fromARGB(255, 228, 88, 8)
+                                      ? const Color.fromARGB(255, 248, 155, 102)
                                       : Colors.white,
                             ),
                       child: ListTile(

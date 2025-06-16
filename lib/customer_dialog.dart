@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'customer.dart';
+import 'edit_customer_page.dart';
 
 class CustomerDialog extends StatefulWidget {
   final Customer customer;
@@ -96,23 +97,10 @@ class _CustomerDialogState extends State<CustomerDialog> {
                 : 'Appointment: ${DateFormat('yyyy-MM-dd').format(_selectedDateTime!)}  ${DateFormat('HH:mm').format(_selectedDateTime!)}',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 8),
-          if (widget.showSetAppointment)
-            ...[
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: _pickDateTime,
-                child: const Text('Set Appointment Date & Time'),
-              ),
-            ],
         ],
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Close'),
-        ),
-        if (widget.showBitButton) // Conditionally show Bit button
+        if (widget.showBitButton)
           ElevatedButton(
             onPressed: () async {
               final phone = widget.customer.phone;
@@ -126,6 +114,57 @@ class _CustomerDialogState extends State<CustomerDialog> {
               }
             },
             child: const Text('Bit'),
+          ),
+        const SizedBox(height: 8),
+        if (widget.showSetAppointment)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => EditCustomerPage(
+                            customer: widget.customer,
+                            docId: widget.docId,
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Text('Edit'),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    onPressed: () async {
+                      await FirebaseFirestore.instance
+                          .collection('customers')
+                          .doc(widget.docId)
+                          .delete();
+                      Navigator.of(context).pop(true);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Customer deleted!')),
+                      );
+                    },
+                    child: const Text('Delete'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Close'),
+                ),
+              ),
+            ],
           ),
       ],
     );
