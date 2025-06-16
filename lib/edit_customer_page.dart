@@ -5,8 +5,14 @@ import 'customer.dart';
 class EditCustomerPage extends StatefulWidget {
   final Customer customer;
   final String docId;
+  final VoidCallback? onCustomerChanged; // <-- Add this line
 
-  const EditCustomerPage({super.key, required this.customer, required this.docId});
+  const EditCustomerPage({
+    super.key,
+    required this.customer,
+    required this.docId,
+    this.onCustomerChanged, // <-- Add this line
+  });
 
   @override
   State<EditCustomerPage> createState() => _EditCustomerPageState();
@@ -154,7 +160,10 @@ class _EditCustomerPageState extends State<EditCustomerPage> {
                       'car': _car,
                       'appointmentDate': _appointmentDate?.toIso8601String(),
                     });
-                    Navigator.of(context).pop(true); // Return true to indicate change
+                    if (widget.onCustomerChanged != null) {
+                      widget.onCustomerChanged!(); // Call the callback
+                    }
+                    Navigator.of(context).pop(true);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Customer updated!')),
                     );

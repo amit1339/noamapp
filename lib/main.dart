@@ -5,6 +5,8 @@ import 'login.dart';
 import 'home_page.dart';
 import 'map_page.dart';
 import 'schedule_page.dart';
+import 'settings.dart';
+import 'translations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,22 +60,33 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_titles[_selectedIndex]), // <-- Set title dynamically
+        title: Text(Translations.text(_titles[_selectedIndex])), // Use translation for title
+        leading: IconButton(
+          icon: const Icon(Icons.settings),
+          onPressed: () async {
+            // Wait for the settings page to pop, then rebuild
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsPage()),
+            );
+            setState(() {}); // Rebuild to reflect language change and update tab
+          },
+        ),
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: const Icon(Icons.home),
+            label: Translations.text('home'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Map',
+            icon: const Icon(Icons.map),
+            label: Translations.text('map'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.schedule),
-            label: 'Schedule',
+            icon: const Icon(Icons.schedule),
+            label: Translations.text('schedule'),
           ),
         ],
         currentIndex: _selectedIndex,

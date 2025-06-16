@@ -9,14 +9,16 @@ class CustomerDialog extends StatefulWidget {
   final Customer customer;
   final String docId;
   final bool showSetAppointment;
-  final bool showBitButton; // Add this
+  final bool showBitButton;
+  final VoidCallback? onCustomerChanged; // <-- Add this line
 
   const CustomerDialog({
     super.key,
     required this.customer,
     required this.docId,
     this.showSetAppointment = true,
-    this.showBitButton = false, // default false
+    this.showBitButton = false,
+    this.onCustomerChanged, // <-- Add this line
   });
 
   @override
@@ -131,6 +133,7 @@ class _CustomerDialogState extends State<CustomerDialog> {
                           builder: (context) => EditCustomerPage(
                             customer: widget.customer,
                             docId: widget.docId,
+                            onCustomerChanged: widget.onCustomerChanged,
                           ),
                         ),
                       );
@@ -147,6 +150,9 @@ class _CustomerDialogState extends State<CustomerDialog> {
                           .collection('customers')
                           .doc(widget.docId)
                           .delete();
+                      if (widget.onCustomerChanged != null) {
+                        widget.onCustomerChanged!(); // Call the callback
+                      }
                       Navigator.of(context).pop(true);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Customer deleted!')),

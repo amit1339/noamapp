@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart'; // Import intl package for DateFormat
 import 'customer.dart'; // Import the Customer class
+import 'translations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -33,8 +34,8 @@ class _HomePageState extends State<HomePage> {
           children: [
             TextFormField(
               controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name',
+              decoration: InputDecoration(
+                labelText: Translations.text('name'),
                 border: OutlineInputBorder(),
               ),
               validator: (value) =>
