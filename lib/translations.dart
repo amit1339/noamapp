@@ -24,7 +24,13 @@ class Translations {
       'save': 'Save',
       'month': 'Month',
       'week': 'Week',
-      // Add more keys as needed
+      'send_reminders': 'Send Reminders',
+      'reminder_message': 'This is a reminder for your appointment on',
+      'services_included': 'Services included',
+      'sent_to': 'Sent to',
+      'date': 'Date',
+      'services': 'Services',
+      'Select_Appointment_Date&Time': 'Select Appointment Date & Time',
     },
     'he': {
       'settings': 'הגדרות',
@@ -48,7 +54,13 @@ class Translations {
       'save': 'שמור',
       'month': 'חודש',
       'week': 'שבוע',
-      // Add more keys as needed
+      'send_reminders': 'שלח תזכורות',
+      'reminder_message': 'זוהי תזכורת לתור שלך בתאריך',
+      'services_included': 'השירותים הכלולים',
+      'sent_to': 'נשלח אל',
+      'date': 'תאריך',
+      'services': 'שירותים',
+      'Select_Appointment_Date&Time': 'בחר תאריך ושעת פגישה',
     },
   };
 

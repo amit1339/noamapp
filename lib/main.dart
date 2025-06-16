@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
     SchedulePage(),
   ];
 
-  final List<String> _titles = ['Home', 'Map', 'Schedule'];
+  final List<String> _titles = [Translations.text('home'), Translations.text('map'), Translations.text('schedule')];
 
   void _onItemTapped(int index) {
     setState(() {

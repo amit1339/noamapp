@@ -44,8 +44,8 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 12),
             TextFormField(
               controller: _phoneController,
-              decoration: const InputDecoration(
-                labelText: 'Phone Number',
+              decoration: InputDecoration(
+                labelText: Translations.text('phone'),
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.phone,
@@ -55,8 +55,8 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 12),
             TextFormField(
               controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
+              decoration: InputDecoration(
+                labelText: Translations.text('email'),
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.emailAddress,
@@ -66,8 +66,8 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 12),
             TextFormField(
               controller: _addressController,
-              decoration: const InputDecoration(
-                labelText: 'Address',
+              decoration: InputDecoration(
+                labelText: Translations.text('address'),
                 border: OutlineInputBorder(),
               ),
               validator: (value) =>
@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 20),
             CheckboxListTile(
-              title: const Text('Sofa'),
+              title: Text(Translations.text('sofa')),
               value: _sofa,
               onChanged: (bool? value) {
                 setState(() {
@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             CheckboxListTile(
-              title: const Text('Air Conditioner'),
+              title: Text(Translations.text('air_conditioner')),
               value: _airConditioner,
               onChanged: (bool? value) {
                 setState(() {
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             CheckboxListTile(
-              title: const Text('Car'),
+              title: Text(Translations.text('car')),
               value: _car,
               onChanged: (bool? value) {
                 setState(() {
@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               title: Text(
                 _appointmentDate == null
-                    ? 'Select Appointment Date & Time'
+                    ? (Translations.text('Select_Appointment_Date&Time'))
                     : 'Appointment: ${DateFormat('yyyy-MM-dd HH:mm').format(_appointmentDate!)}',
               ),
               trailing: const Icon(Icons.calendar_today),
@@ -178,7 +178,7 @@ class _HomePageState extends State<HomePage> {
                   });
                 }
               },
-              child: const Text('Add Customer'),
+              child: Text(Translations.text('add_customer')),
             ),
           ],
         ),

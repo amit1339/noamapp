@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'customer.dart';
 import 'customer_dialog.dart';
+import 'translations.dart'; // Add this import
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -49,6 +50,33 @@ class _SchedulePageState extends State<SchedulePage> {
     return _appointments[date] ?? [];
   }
 
+  void _sendRemindersForDay(BuildContext context) {
+    final appointments = _getAppointmentsForDay(_selectedDay ?? _focusedDay);
+    if (appointments.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(Translations.text('no_appointments_to_remind'))),
+      );
+      return;
+    }
+    for (var customer in appointments) {
+      final date = customer.appointmentDate != null
+          ? '${customer.appointmentDate!.day}/${customer.appointmentDate!.month}/${customer.appointmentDate!.year}'
+          : '';
+      final List<String> services = [];
+      if (customer.sofa) services.add(Translations.text('sofa'));
+      if (customer.car) services.add(Translations.text('car'));
+      if (customer.airConditioner) services.add(Translations.text('air_condi'));
+      final message =
+          '${Translations.text('reminder_message')} $date. ${Translations.text('services_included')}: ${services.join(', ')}.';
+
+      // Here you would integrate with your messaging/SMS API.
+      // For demonstration, we'll just show a snackbar.
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${Translations.text('sent_to')} ${customer.name}: $message')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -83,12 +111,22 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
         ),
         const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => _sendRemindersForDay(context),
+              child: Text(Translations.text('send_reminders')),
+            ),
+          ),
+        ),
         Expanded(
           child: Builder(
             builder: (context) {
               final appointments = _getAppointmentsForDay(_selectedDay ?? _focusedDay);
               if (appointments.isEmpty) {
-                return const Center(child: Text('No appointments for this day.'));
+                return Center(child: Text(Translations.text('no_appointments_for_day')));
               }
               // Sort appointments by time
               appointments.sort((a, b) {
@@ -127,7 +165,7 @@ class _SchedulePageState extends State<SchedulePage> {
                       child: ListTile(
                         title: Text(customer.name),
                         subtitle: Text(
-                          'Time: ${customer.appointmentDate != null ? TimeOfDay.fromDateTime(customer.appointmentDate!).format(context) : ''}',
+                          '${Translations.text('time')}: ${customer.appointmentDate != null ? TimeOfDay.fromDateTime(customer.appointmentDate!).format(context) : ''}',
                         ),
                         onTap: () {
                           showDialog(
