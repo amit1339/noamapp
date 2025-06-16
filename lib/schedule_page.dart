@@ -64,7 +64,6 @@ class _SchedulePageState extends State<SchedulePage> {
           : '';
       final List<String> services = [];
       if (customer.sofa) services.add(Translations.text('sofa'));
-      if (customer.car) services.add(Translations.text('car'));
       if (customer.airConditioner) services.add(Translations.text('air_condi'));
       final message =
           '${Translations.text('reminder_message')} $date. ${Translations.text('services_included')}: ${services.join(', ')}.';

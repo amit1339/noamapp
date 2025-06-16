@@ -34,50 +34,6 @@ class _CustomerDialogState extends State<CustomerDialog> {
     _selectedDateTime = widget.customer.appointmentDate;
   }
 
-  Future<void> _pickDateTime() async {
-    // Pick date
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: _selectedDateTime ?? DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2100),
-    );
-    if (pickedDate == null) return;
-
-    // Pick time in 24-hour format
-    TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: _selectedDateTime != null
-          ? TimeOfDay(hour: _selectedDateTime!.hour, minute: _selectedDateTime!.minute)
-          : TimeOfDay.now(),
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-          child: child!,
-        );
-      },
-    );
-    if (pickedTime == null) return;
-
-    final combined = DateTime(
-      pickedDate.year,
-      pickedDate.month,
-      pickedDate.day,
-      pickedTime.hour,
-      pickedTime.minute,
-    );
-
-    setState(() {
-      _selectedDateTime = combined;
-    });
-
-    // Update in Firestore
-    await FirebaseFirestore.instance
-        .collection('customers')
-        .doc(widget.docId)
-        .update({'appointmentDate': combined.toIso8601String()});
-  }
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -87,11 +43,14 @@ class _CustomerDialogState extends State<CustomerDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Phone: ${widget.customer.phone}'),
-          Text('Email: ${widget.customer.email}'),
           Text('Address: ${widget.customer.address}'),
           Text('Sofa: ${widget.customer.sofa ? "Yes" : "No"}'),
           Text('Air Conditioner: ${widget.customer.airConditioner ? "Yes" : "No"}'),
-          Text('Car: ${widget.customer.car ? "Yes" : "No"}'),
+          if (widget.customer.remark != null && widget.customer.remark!.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text('Remark: ${widget.customer.remark!}'),
+            ),
           const SizedBox(height: 16),
           Text(
             _selectedDateTime == null

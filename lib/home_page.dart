@@ -14,8 +14,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _remarkController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -23,6 +23,15 @@ class _HomePageState extends State<HomePage> {
   bool _airConditioner = false;
   bool _car = false;
   DateTime? _appointmentDate;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+    _remarkController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,17 +63,6 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 12),
             TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                labelText: Translations.text('email'),
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.emailAddress,
-              validator: (value) =>
-                  value == null || value.isEmpty ? 'Email is required' : null,
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
               controller: _addressController,
               decoration: InputDecoration(
                 labelText: Translations.text('address'),
@@ -72,6 +70,15 @@ class _HomePageState extends State<HomePage> {
               ),
               validator: (value) =>
                   value == null || value.isEmpty ? 'Address is required' : null,
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _remarkController,
+              decoration: InputDecoration(
+                labelText: Translations.text('remark'),
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 2,
             ),
             const SizedBox(height: 20),
             CheckboxListTile(
@@ -89,15 +96,6 @@ class _HomePageState extends State<HomePage> {
               onChanged: (bool? value) {
                 setState(() {
                   _airConditioner = value ?? false;
-                });
-              },
-            ),
-            CheckboxListTile(
-              title: Text(Translations.text('car')),
-              value: _car,
-              onChanged: (bool? value) {
-                setState(() {
-                  _car = value ?? false;
                 });
               },
             ),
@@ -151,12 +149,11 @@ class _HomePageState extends State<HomePage> {
                   final customer = Customer(
                     name: _nameController.text,
                     phone: _phoneController.text,
-                    email: _emailController.text,
                     address: _addressController.text,
                     sofa: _sofa,
                     airConditioner: _airConditioner,
-                    car: _car,
                     appointmentDate: _appointmentDate,
+                    remark: _remarkController.text.isNotEmpty ? _remarkController.text : null,
                   );
                   await FirebaseFirestore.instance
                       .collection('customers')
@@ -168,8 +165,8 @@ class _HomePageState extends State<HomePage> {
 
                   _nameController.clear();
                   _phoneController.clear();
-                  _emailController.clear();
                   _addressController.clear();
+                  _remarkController.clear();
                   setState(() {
                     _sofa = false;
                     _airConditioner = false;

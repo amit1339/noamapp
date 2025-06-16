@@ -21,11 +21,10 @@ class EditCustomerPage extends StatefulWidget {
 class _EditCustomerPageState extends State<EditCustomerPage> {
   late TextEditingController _nameController;
   late TextEditingController _phoneController;
-  late TextEditingController _emailController;
   late TextEditingController _addressController;
+  late TextEditingController _remarkController; // <-- Add this line
   bool _sofa = false;
   bool _airConditioner = false;
-  bool _car = false;
   DateTime? _appointmentDate;
   final _formKey = GlobalKey<FormState>();
 
@@ -34,12 +33,20 @@ class _EditCustomerPageState extends State<EditCustomerPage> {
     super.initState();
     _nameController = TextEditingController(text: widget.customer.name);
     _phoneController = TextEditingController(text: widget.customer.phone);
-    _emailController = TextEditingController(text: widget.customer.email);
     _addressController = TextEditingController(text: widget.customer.address);
+    _remarkController = TextEditingController(text: widget.customer.remark ?? ''); // <-- Add this line
     _sofa = widget.customer.sofa;
     _airConditioner = widget.customer.airConditioner;
-    _car = widget.customer.car;
     _appointmentDate = widget.customer.appointmentDate;
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+    _remarkController.dispose(); // <-- Add this line
+    super.dispose();
   }
 
   @override
@@ -66,16 +73,15 @@ class _EditCustomerPageState extends State<EditCustomerPage> {
               ),
               const SizedBox(height: 12),
               TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder()),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) => value == null || value.isEmpty ? 'Email is required' : null,
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
                 controller: _addressController,
                 decoration: const InputDecoration(labelText: 'Address', border: OutlineInputBorder()),
                 validator: (value) => value == null || value.isEmpty ? 'Address is required' : null,
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _remarkController,
+                decoration: const InputDecoration(labelText: 'Remark', border: OutlineInputBorder()),
+                maxLines: 2,
               ),
               const SizedBox(height: 20),
               CheckboxListTile(
@@ -93,15 +99,6 @@ class _EditCustomerPageState extends State<EditCustomerPage> {
                 onChanged: (bool? value) {
                   setState(() {
                     _airConditioner = value ?? false;
-                  });
-                },
-              ),
-              CheckboxListTile(
-                title: const Text('Car'),
-                value: _car,
-                onChanged: (bool? value) {
-                  setState(() {
-                    _car = value ?? false;
                   });
                 },
               ),
@@ -153,12 +150,11 @@ class _EditCustomerPageState extends State<EditCustomerPage> {
                         .update({
                       'name': _nameController.text,
                       'phone': _phoneController.text,
-                      'email': _emailController.text,
                       'address': _addressController.text,
                       'sofa': _sofa,
                       'airConditioner': _airConditioner,
-                      'car': _car,
                       'appointmentDate': _appointmentDate?.toIso8601String(),
+                      'remark': _remarkController.text, // <-- Add this line
                     });
                     if (widget.onCustomerChanged != null) {
                       widget.onCustomerChanged!(); // Call the callback
