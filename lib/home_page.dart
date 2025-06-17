@@ -122,7 +122,7 @@ class _CustomerFormState extends State<CustomerForm> {
                 border: const OutlineInputBorder(),
               ),
               validator: (value) =>
-                  value == null || value.isEmpty ? 'Name is required' : null,
+                  value == null || value.isEmpty ? '${Translations.text('name')} ${Translations.text('is required')}' : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
@@ -133,7 +133,7 @@ class _CustomerFormState extends State<CustomerForm> {
               ),
               keyboardType: TextInputType.phone,
               validator: (value) =>
-                  value == null || value.isEmpty ? 'Phone number is required' : null,
+                  value == null || value.isEmpty ? '${Translations.text('phone')} ${Translations.text('is required')}' : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
@@ -143,7 +143,7 @@ class _CustomerFormState extends State<CustomerForm> {
                 border: const OutlineInputBorder(),
               ),
               validator: (value) =>
-                  value == null || value.isEmpty ? 'Address is required' : null,
+                  value == null || value.isEmpty ? '${Translations.text('addres')} ${Translations.text('is required')}' : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
@@ -178,7 +178,7 @@ class _CustomerFormState extends State<CustomerForm> {
               title: Text(
                 _appointmentDate == null
                     ? (Translations.text('Select_Appointment_Date&Time'))
-                    : 'Appointment: ${DateFormat('yyyy-MM-dd HH:mm').format(_appointmentDate!)}',
+                    : '${Translations.text('appointment')}: ${DateFormat('yyyy-MM-dd HH:mm').format(_appointmentDate!)}',
               ),
               trailing: const Icon(Icons.calendar_today),
               onTap: () async {
@@ -216,7 +216,7 @@ class _CustomerFormState extends State<CustomerForm> {
               onPressed: _saveCustomer,
               child: Text(widget.customer == null
                   ? Translations.text('add_customer')
-                  : 'Save'),
+                  : Translations.text('save')),
             ),
           ],
         ),

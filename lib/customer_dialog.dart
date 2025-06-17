@@ -3,7 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'customer.dart';
-import 'home_page.dart'; // <-- Use the unified form
+import 'home_page.dart';
+import 'translations.dart';
 
 class CustomerDialog extends StatefulWidget {
   final Customer customer;
@@ -42,20 +43,20 @@ class _CustomerDialogState extends State<CustomerDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Phone: ${widget.customer.phone}'),
-          Text('Address: ${widget.customer.address}'),
-          Text('Sofa: ${widget.customer.sofa ? "Yes" : "No"}'),
-          Text('Air Conditioner: ${widget.customer.airConditioner ? "Yes" : "No"}'),
+          Text('${Translations.text('phone')}: ${widget.customer.phone}'),
+          Text('${Translations.text('address')}: ${widget.customer.address}'),
+          Text('${Translations.text('sofa')}: ${widget.customer.sofa ? Translations.text('yes') : Translations.text('no')}'),
+          Text('${Translations.text('air_conditioner')}: ${widget.customer.airConditioner ? Translations.text('yes') : Translations.text('no')}'),
           if (widget.customer.remark != null && widget.customer.remark!.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
-              child: Text('Remark: ${widget.customer.remark!}'),
+              child: Text('${Translations.text('remark')}: ${widget.customer.remark!}'),
             ),
           const SizedBox(height: 16),
           Text(
             _selectedDateTime == null
-                ? 'No appointment set'
-                : 'Appointment: ${DateFormat('yyyy-MM-dd').format(_selectedDateTime!)}  ${DateFormat('HH:mm').format(_selectedDateTime!)}',
+                ? Translations.text('no_appointment')
+                : '${Translations.text('appointment')}: ${DateFormat('yyyy-MM-dd').format(_selectedDateTime!)}  ${DateFormat('HH:mm').format(_selectedDateTime!)}',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ],
@@ -70,7 +71,7 @@ class _CustomerDialogState extends State<CustomerDialog> {
                 await launchUrl(url);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Could not launch SMS app')),
+                  SnackBar(content: Text(Translations.text('Could_not_launch_SMS_app'))),
                 );
               }
             },
@@ -90,7 +91,7 @@ class _CustomerDialogState extends State<CustomerDialog> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => Scaffold(
-                            appBar: AppBar(title: const Text('Edit Customer')),
+                            appBar: AppBar(title: Text(Translations.text('edit_customer'))),
                             body: CustomerForm(
                               customer: widget.customer,
                               docId: widget.docId,
@@ -100,7 +101,7 @@ class _CustomerDialogState extends State<CustomerDialog> {
                         ),
                       );
                     },
-                    child: const Text('Edit'),
+                    child: Text(Translations.text('edit')),
                   ),
                   const SizedBox(width: 8),
                   ElevatedButton(
@@ -117,10 +118,10 @@ class _CustomerDialogState extends State<CustomerDialog> {
                       }
                       Navigator.of(context).pop(true);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Customer deleted!')),
+                        SnackBar(content: Text(Translations.text('customer_deleted'))),
                       );
                     },
-                    child: const Text('Delete'),
+                    child: Text(Translations.text('delete')),
                   ),
                 ],
               ),
@@ -129,7 +130,7 @@ class _CustomerDialogState extends State<CustomerDialog> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Close'),
+                  child: Text(Translations.text('close')),
                 ),
               ),
             ],

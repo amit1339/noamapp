@@ -1,5 +1,5 @@
 class Translations {
-  static String currentLanguage = 'en';
+  static String currentLanguage = 'he';
 
   static final Map<String, Map<String, String>> _localizedValues = {
     'en': {
@@ -30,6 +30,18 @@ class Translations {
       'services': 'Services',
       'Select_Appointment_Date&Time': 'Select Appointment Date & Time',
       'remark': 'Remark',
+      'no_appointment': 'No appointment set',
+      'Could_not_launch_SMS_app': 'Could not launch SMS app',
+      'customer_deleted': 'Customer deleted successfully',
+      'yes': 'Yes',
+      'no': 'No',
+      'is required': 'is required',
+      'login': 'Login',
+      'username': 'Username',
+      'password': 'Password',
+      'enter_username': 'Please enter your username',
+      'enter_password': 'Please enter your password',
+      'login_failed': 'Login failed',
     },
     'he': {
       'settings': 'הגדרות',
@@ -59,6 +71,18 @@ class Translations {
       'services': 'שירותים',
       'Select_Appointment_Date&Time': 'בחר תאריך ושעת פגישה',
       'remark': 'הערות',
+      'no_appointment': 'לא נקבעה פגישה',
+      'Could_not_launch_SMS_app': 'לא ניתן לפתוח את אפליקציית ההודעות',
+      'customer_deleted': 'הלקוח נמחק בהצלחה',
+      'yes': 'כן',
+      'no': 'לא',
+      'is required': 'שדה חובה',
+      'login': 'התחברות',
+      'username': 'שם משתמש',
+      'password': 'סיסמה',
+      'enter_username': 'אנא הזן שם משתמש',
+      'enter_password': 'אנא הזן סיסמה',
+      'login_failed': 'ההתחברות נכשלה',
     },
   };
 

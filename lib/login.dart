@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'main.dart';
+import 'translations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(title: Text(Translations.text('login'))),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -47,17 +48,17 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               TextFormField(
                 controller: _usernameController,
-                decoration: const InputDecoration(labelText: 'Username'),
+                decoration: InputDecoration(labelText: Translations.text('username')),
                 validator: (value) =>
-                  value == null || value.isEmpty ? 'Please enter your username' : null,
+                  value == null || value.isEmpty ? Translations.text('enter_username') : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
+                decoration: InputDecoration(labelText: Translations.text('password')),
                 obscureText: true,
                 validator: (value) =>
-                  value == null || value.isEmpty ? 'Please enter your password' : null,
+                  value == null || value.isEmpty ? Translations.text('enter_password') : null,
               ),
               if (_errorMessage != null) ...[
                 const SizedBox(height: 16),
@@ -70,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     _login();
                   }
                 },
-                child: const Text('Login'),
+                child: Text(Translations.text('login')),
               ),
             ],
           ),

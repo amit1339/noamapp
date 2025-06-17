@@ -42,13 +42,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _pages = <Widget>[
-    HomePage(), // Use the new HomePage widget
-    MapPage(),
-    SchedulePage(),
+  // Change from a list of widgets to a list of widget builder functions
+  static final List<Widget Function()> _pageBuilders = <Widget Function()>[
+    () => HomePage(),
+    () => MapPage(),
+    () => SchedulePage(),
   ];
 
-  final List<String> _titles = [Translations.text('home'), Translations.text('map'), Translations.text('schedule')];
+  final List<String> _titles = ['home', 'map', 'schedule'];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -60,20 +61,20 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Translations.text(_titles[_selectedIndex])), // Use translation for title
+        title: Text(Translations.text(_titles[_selectedIndex])),
         leading: IconButton(
           icon: const Icon(Icons.settings),
           onPressed: () async {
-            // Wait for the settings page to pop, then rebuild
             await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const SettingsPage()),
             );
-            setState(() {}); // Rebuild to reflect language change and update tab
+            setState(() {}); // Rebuild to reflect language change
           },
         ),
       ),
-      body: _pages[_selectedIndex],
+      // Build the selected page each time
+      body: _pageBuilders[_selectedIndex](),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(

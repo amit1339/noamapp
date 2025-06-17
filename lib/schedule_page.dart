@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'customer.dart';
 import 'customer_dialog.dart';
-import 'translations.dart'; // Add this import
+import 'translations.dart'; 
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -64,7 +64,7 @@ class _SchedulePageState extends State<SchedulePage> {
           : '';
       final List<String> services = [];
       if (customer.sofa) services.add(Translations.text('sofa'));
-      if (customer.airConditioner) services.add(Translations.text('air_condi'));
+      if (customer.airConditioner) services.add(Translations.text('air_conditioner'));
       final message =
           '${Translations.text('reminder_message')} $date. ${Translations.text('services_included')}: ${services.join(', ')}.';
 
@@ -87,9 +87,9 @@ class _SchedulePageState extends State<SchedulePage> {
           selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
           eventLoader: _getAppointmentsForDay,
           calendarFormat: _calendarFormat,
-          availableCalendarFormats: const {
-            CalendarFormat.week: 'Week',
-            CalendarFormat.month: 'Month',
+          availableCalendarFormats: {
+            CalendarFormat.week: Translations.text('week'),
+            CalendarFormat.month: Translations.text('month'),
           },
           onFormatChanged: (format) {
             setState(() {
