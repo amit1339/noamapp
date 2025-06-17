@@ -63,19 +63,48 @@ class _CustomerDialogState extends State<CustomerDialog> {
       ),
       actions: [
         if (widget.showBitButton)
-          ElevatedButton(
-            onPressed: () async {
-              final phone = widget.customer.phone;
-              final url = Uri.parse('sms:$phone?body=${Uri.encodeComponent('Check this out: https://www.google.com/')}');
-              if (await canLaunchUrl(url)) {
-                await launchUrl(url);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(Translations.text('Could_not_launch_SMS_app'))),
-                );
-              }
-            },
-            child: const Text('Bit'),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  final phone = widget.customer.phone;
+                  final url = Uri.parse('sms:$phone?body=${Uri.encodeComponent('Check this out: https://www.google.com/')}');
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(Translations.text('Could_not_launch_SMS_app'))),
+                    );
+                  }
+                },
+                child: const Text('Bit'),
+              ),
+              const SizedBox(width: 8),
+              ElevatedButton(
+                onPressed: () async {
+                  final phone = widget.customer.phone;
+                  final dateStr = _selectedDateTime != null
+                      ? DateFormat('yyyy-MM-dd').format(_selectedDateTime!)
+                      : '';
+                  final List<String> services = [];
+                  if (widget.customer.sofa) services.add(Translations.text('sofa'));
+                  if (widget.customer.airConditioner) services.add(Translations.text('air_conditioner'));
+                  final message =
+                      '${Translations.text('reminder_message')} $dateStr. ${Translations.text('services_included')}: ${services.join(', ')}.';
+
+                  final url = Uri.parse('sms:$phone?body=${Uri.encodeComponent(message)}');
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(Translations.text('Could_not_launch_SMS_app'))),
+                    );
+                  }
+                },
+                child: Text(Translations.text('send_reminders')),
+              ),
+            ],
           ),
         const SizedBox(height: 8),
         if (widget.showSetAppointment)

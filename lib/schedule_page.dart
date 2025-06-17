@@ -4,6 +4,8 @@ import 'package:table_calendar/table_calendar.dart';
 import 'customer.dart';
 import 'customer_dialog.dart';
 import 'translations.dart'; 
+import 'dart:convert'; 
+import 'package:http/http.dart' as http; // Add this import
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -50,32 +52,6 @@ class _SchedulePageState extends State<SchedulePage> {
     return _appointments[date] ?? [];
   }
 
-  void _sendRemindersForDay(BuildContext context) {
-    final appointments = _getAppointmentsForDay(_selectedDay ?? _focusedDay);
-    if (appointments.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(Translations.text('no_appointments_to_remind'))),
-      );
-      return;
-    }
-    for (var customer in appointments) {
-      final date = customer.appointmentDate != null
-          ? '${customer.appointmentDate!.day}/${customer.appointmentDate!.month}/${customer.appointmentDate!.year}'
-          : '';
-      final List<String> services = [];
-      if (customer.sofa) services.add(Translations.text('sofa'));
-      if (customer.airConditioner) services.add(Translations.text('air_conditioner'));
-      final message =
-          '${Translations.text('reminder_message')} $date. ${Translations.text('services_included')}: ${services.join(', ')}.';
-
-      // Here you would integrate with your messaging/SMS API.
-      // For demonstration, we'll just show a snackbar.
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${Translations.text('sent_to')} ${customer.name}: $message')),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -110,16 +86,6 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
         ),
         const SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => _sendRemindersForDay(context),
-              child: Text(Translations.text('send_reminders')),
-            ),
-          ),
-        ),
         Expanded(
           child: Builder(
             builder: (context) {
