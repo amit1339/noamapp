@@ -42,6 +42,10 @@ class Translations {
       'enter_username': 'Please enter your username',
       'enter_password': 'Please enter your password',
       'login_failed': 'Login failed',
+      'customers': 'Customers',
+      'future_customers': 'Future Customers',
+      'archive': 'Archive',
+      'no_customers': 'No customers',
     },
     'he': {
       'settings': 'הגדרות',
@@ -83,6 +87,10 @@ class Translations {
       'enter_username': 'אנא הזן שם משתמש',
       'enter_password': 'אנא הזן סיסמה',
       'login_failed': 'ההתחברות נכשלה',
+      'customers': 'לקוחות',
+      'future_customers': 'לקוחות עתידיים',
+      'archive': 'ארכיון',
+      'no_customers': 'אין לקוחות',
     },
   };
 
