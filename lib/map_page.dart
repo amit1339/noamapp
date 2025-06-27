@@ -26,11 +26,32 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<void> _loadCustomerMarkers() async {
+    final today = DateTime.now();
+    final todayDate = DateTime(today.year, today.month, today.day);
+
     final customers = await FirebaseFirestore.instance.collection('customers').get();
     for (var doc in customers.docs) {
       final data = doc.data();
       final address = data['address'] ?? '';
-      if (address.isNotEmpty) {
+      final appointmentTimestamp = data['appointmentDate'];
+      if (address.isNotEmpty && appointmentTimestamp != null) {
+        DateTime appointmentDate;
+        if (appointmentTimestamp is Timestamp) {
+          appointmentDate = appointmentTimestamp.toDate();
+        } else if (appointmentTimestamp is DateTime) {
+          appointmentDate = appointmentTimestamp;
+        } else if (appointmentTimestamp is String) {
+          try {
+            appointmentDate = DateTime.parse(appointmentTimestamp);
+          } catch (e) {
+            continue;
+          }
+        } else {
+          continue;
+        }
+        final appointmentDay = DateTime(appointmentDate.year, appointmentDate.month, appointmentDate.day);
+        if (appointmentDay != todayDate) continue;
+
         try {
           LatLng? latLng = await getLatLngFromAddress(address);
           if (latLng != null) {
