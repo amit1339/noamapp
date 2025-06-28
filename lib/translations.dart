@@ -47,6 +47,8 @@ class Translations {
       'archive': 'Archive',
       'no_customers': 'No customers',
       'payment_in_bit': 'Payment in Bit',
+      'nearby_appointment': 'Nearby Appointment',
+      'check': 'Check',
     },
     'he': {
       'settings': 'הגדרות',
@@ -93,6 +95,8 @@ class Translations {
       'archive': 'ארכיון',
       'no_customers': 'אין לקוחות',
       'payment_in_bit': 'תשלום בביט',
+      'nearby_appointment': 'פגישה קרובה',
+      'check': 'בדוק',
     },
   };
 

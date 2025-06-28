@@ -15,6 +15,7 @@ class _CustomersPageState extends State<CustomersPage> with SingleTickerProvider
   late TabController _tabController;
   List<Customer> _futureCustomers = [];
   List<Customer> _archiveCustomers = [];
+  Map<String, String> _customerDocIds = {}; 
   bool _loading = true;
 
   @override
@@ -32,6 +33,7 @@ class _CustomersPageState extends State<CustomersPage> with SingleTickerProvider
     final snapshot = await FirebaseFirestore.instance.collection('customers').get();
     List<Customer> future = [];
     List<Customer> archive = [];
+    Map<String, String> docIds = {};
 
     for (var doc in snapshot.docs) {
       final data = doc.data();
@@ -52,6 +54,7 @@ class _CustomersPageState extends State<CustomersPage> with SingleTickerProvider
       if (appointmentDate == null) continue;
 
       final customer = Customer.fromJson(data);
+      docIds[customer.name] = doc.id; 
 
       final appointmentDay = DateTime(appointmentDate.year, appointmentDate.month, appointmentDate.day);
       if (appointmentDay.isBefore(today)) {
@@ -70,6 +73,7 @@ class _CustomersPageState extends State<CustomersPage> with SingleTickerProvider
     setState(() {
       _futureCustomers = future;
       _archiveCustomers = archive;
+      _customerDocIds = docIds;
       _loading = false;
     });
   }
@@ -82,19 +86,27 @@ class _CustomersPageState extends State<CustomersPage> with SingleTickerProvider
       itemCount: customers.length,
       itemBuilder: (context, index) {
         final customer = customers[index];
+        final docId = _customerDocIds[customer.name] ?? '';
         return ListTile(
           title: Text(customer.name),
           subtitle: Text('${Translations.text('date')}: ${customer.appointmentDate}'),
-          onTap: () {
-            showDialog(
+          onTap: () async {
+            final result = await showDialog(
               context: context,
               builder: (context) => CustomerDialog(
                 customer: customer,
-                docId: '', // Provide docId if needed
+                docId: docId,
                 showSetAppointment: true,
                 showBitButton: false,
+                onCustomerChanged: () {
+                  _fetchCustomers(); // Reload customers when changed
+                },
               ),
             );
+            if (result == true) {
+              // Data was changed, reload customers
+              _fetchCustomers();
+            }
           },
         );
       },

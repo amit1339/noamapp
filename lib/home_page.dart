@@ -2,13 +2,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart'; // For LatLng
+import 'package:google_maps_flutter/google_maps_flutter.dart'; 
 import 'customer.dart';
 import 'translations.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-// Add this helper function to calculate distance between two coordinates (Haversine formula)
+//  (Haversine formula)
 double calculateDistanceKm(LatLng a, LatLng b) {
   const earthRadius = 6371.0;
   final dLat = (b.latitude - a.latitude) * pi / 180.0;
@@ -261,7 +261,7 @@ class _CustomerFormState extends State<CustomerForm> {
                             _isCheckingProximity = false;
                           });
                         },
-                  child: Text(Translations.text('submit')),
+                  child: Text(Translations.text('check')),
                 ),
               ],
             ),
@@ -269,7 +269,7 @@ class _CustomerFormState extends State<CustomerForm> {
             TextFormField(
               readOnly: true,
               decoration: InputDecoration(
-                labelText: Translations.text('Nearby Appointment'),
+                labelText: Translations.text('nearby_appointment'),
                 border: const OutlineInputBorder(),
               ),
               controller: TextEditingController(text: _proximityResult),
