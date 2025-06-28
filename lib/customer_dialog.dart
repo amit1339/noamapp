@@ -69,7 +69,8 @@ class _CustomerDialogState extends State<CustomerDialog> {
               ElevatedButton(
                 onPressed: () async {
                   final phone = widget.customer.phone;
-                  final url = Uri.parse('sms:$phone?body=${Uri.encodeComponent('Check this out: https://www.google.com/')}');
+                  final message = '${Translations.text('payment_in_bit')}:\nhttps://www.bitpay.co.il/app/me/6E31EE93-B3D8-9650-99EC-F4641AC5DA0A7797';
+                  final url = Uri.parse('sms:$phone?body=${Uri.encodeComponent(message)}');
                   if (await canLaunchUrl(url)) {
                     await launchUrl(url);
                   } else {
@@ -84,14 +85,14 @@ class _CustomerDialogState extends State<CustomerDialog> {
               ElevatedButton(
                 onPressed: () async {
                   final phone = widget.customer.phone;
-                  final dateStr = _selectedDateTime != null
-                      ? DateFormat('yyyy-MM-dd').format(_selectedDateTime!)
+                  final dateTimeStr = _selectedDateTime != null
+                      ? '${DateFormat('yyyy-MM-dd').format(_selectedDateTime!)} ${DateFormat('HH:mm').format(_selectedDateTime!)}'
                       : '';
                   final List<String> services = [];
                   if (widget.customer.sofa) services.add(Translations.text('sofa'));
                   if (widget.customer.airConditioner) services.add(Translations.text('air_conditioner'));
                   final message =
-                      '${Translations.text('reminder_message')} $dateStr. ${Translations.text('services_included')}: ${services.join(', ')}.';
+                      '${Translations.text('reminder_message')} $dateTimeStr. ${Translations.text('services_included')}: ${services.join(', ')}.';
 
                   final url = Uri.parse('sms:$phone?body=${Uri.encodeComponent(message)}');
                   if (await canLaunchUrl(url)) {

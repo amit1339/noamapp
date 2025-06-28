@@ -46,6 +46,7 @@ class Translations {
       'future_customers': 'Future Customers',
       'archive': 'Archive',
       'no_customers': 'No customers',
+      'payment_in_bit': 'Payment in Bit',
     },
     'he': {
       'settings': 'הגדרות',
@@ -91,6 +92,7 @@ class Translations {
       'future_customers': 'לקוחות עתידיים',
       'archive': 'ארכיון',
       'no_customers': 'אין לקוחות',
+      'payment_in_bit': 'תשלום בביט',
     },
   };
 
